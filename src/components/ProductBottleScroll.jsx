@@ -18,11 +18,40 @@ export default function ProductBottleScroll({ product }) {
     offset: ["start start", "end end"],
   });
 
-  // Calculate frame details
-  // Mango has 118 frames: magnific_sequence-cinematic-produc_e8JixcKdqL_1000.jpg to magnific_sequence-cinematic-produc_e8JixcKdqL_1117.jpg
-  const startFrame = 1000;
-  const endFrame = 1117;
-  const totalFrames = endFrame - startFrame + 1; // 118
+  const [isHovered, setIsHovered] = useState(false);
+  const autoProgressRef = useRef(0);
+
+  // Define sequence configurations for all available products
+  const getProductSequenceConfig = (id) => {
+    if (id === "mango") {
+      return {
+        startFrame: 1000,
+        endFrame: 1117,
+        totalFrames: 118,
+        getImgSrc: (i) => `/images/mango/magnific_sequence-cinematic-produc_e8JixcKdqL_${i}.jpg`
+      };
+    } else if (id === "banana") {
+      return {
+        startFrame: 1000,
+        endFrame: 1150,
+        totalFrames: 151,
+        getImgSrc: (i) => `/images/Burger/Sequence 0${i}.jpg`
+      };
+    } else if (id === "strawberry") {
+      return {
+        startFrame: 1000,
+        endFrame: 1110,
+        totalFrames: 111,
+        getImgSrc: (i) => `/images/FriedChicken/Sequence 0${i}.jpg`
+      };
+    }
+    return null;
+  };
+
+  const activeConfig = getProductSequenceConfig(product.id);
+  const startFrame = activeConfig ? activeConfig.startFrame : 1000;
+  const endFrame = activeConfig ? activeConfig.endFrame : 1117;
+  const totalFrames = activeConfig ? activeConfig.totalFrames : 118;
 
   useEffect(() => {
     // Reset loader states for a new product
@@ -31,8 +60,7 @@ export default function ProductBottleScroll({ product }) {
     setImages([]);
     setErrorLoading(false);
 
-    // If not mango, we don't have an image sequence in assets yet. We can load a premium fallback static image.
-    if (product.id !== "mango") {
+    if (!activeConfig) {
       setIsPreloaded(true);
       return;
     }
@@ -49,24 +77,25 @@ export default function ProductBottleScroll({ product }) {
       }
     };
 
-    const handleImageError = () => {
+    const handleImageError = (e) => {
+      console.error("Error loading sequence image", e);
       setErrorLoading(true);
       setIsPreloaded(true); // Proceed to fallback if files aren't ready
     };
 
-    // Preload all 118 frames
+    // Preload all frames for this active config
     for (let i = startFrame; i <= endFrame; i++) {
       const img = new Image();
-      img.src = `/images/mango/magnific_sequence-cinematic-produc_e8JixcKdqL_${i}.jpg`;
+      img.src = activeConfig.getImgSrc(i);
       img.onload = () => handleImageLoad(img);
       img.onerror = handleImageError;
       loadedImages.push(img);
     }
-  }, [product.id, totalFrames]);
+  }, [product.id, totalFrames, startFrame, endFrame]);
 
   // Handle drawing and resizing
   useEffect(() => {
-    if (!isPreloaded || images.length === 0 || product.id !== "mango" || errorLoading) return;
+    if (!isPreloaded || images.length === 0 || !activeConfig || errorLoading) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -83,7 +112,7 @@ export default function ProductBottleScroll({ product }) {
       ctx.scale(dpr, dpr);
       
       // Initial render on resize
-      const currentProgress = scrollYProgress.get();
+      const currentProgress = isHovered ? autoProgressRef.current : scrollYProgress.get();
       renderFrame(currentProgress);
     };
 
@@ -117,15 +146,15 @@ export default function ProductBottleScroll({ product }) {
       let offsetY = 0;
 
       if (canvasRatio > imgRatio) {
-        // Canvas is wider than image (fit height)
-        drawHeight = canvasHeight;
-        drawWidth = canvasHeight * imgRatio;
-        offsetX = (canvasWidth - drawWidth) / 2;
-      } else {
-        // Canvas is taller than image (fit width)
+        // Canvas is wider than image (fit width, crop height)
         drawWidth = canvasWidth;
         drawHeight = canvasWidth / imgRatio;
         offsetY = (canvasHeight - drawHeight) / 2;
+      } else {
+        // Canvas is taller than image (fit height, crop width)
+        drawHeight = canvasHeight;
+        drawWidth = canvasHeight * imgRatio;
+        offsetX = (canvasWidth - drawWidth) / 2;
       }
 
       ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
@@ -134,22 +163,62 @@ export default function ProductBottleScroll({ product }) {
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas(); // Trigger first time
 
-    // Bind motion scroll updates to canvas frames
+    let animId;
+    const autoPlayLoop = () => {
+      autoProgressRef.current += 0.0035; // Increment auto-spin progress speed
+      if (autoProgressRef.current > 0.999) {
+        autoProgressRef.current = 0; // Wrap around
+      }
+      renderFrame(autoProgressRef.current);
+      animId = requestAnimationFrame(autoPlayLoop);
+    };
+
+    if (isHovered) {
+      // Warm up start progress from the exact current scroll position for smooth transition
+      autoProgressRef.current = scrollYProgress.get();
+      animId = requestAnimationFrame(autoPlayLoop);
+    } else {
+      // Follow normal scroll position
+      renderFrame(scrollYProgress.get());
+    }
+
+    // Bind motion scroll updates to canvas frames (only when NOT hovered)
     const unsubscribe = scrollYProgress.on("change", (latest) => {
-      requestAnimationFrame(() => renderFrame(latest));
+      if (!isHovered) {
+        requestAnimationFrame(() => renderFrame(latest));
+      }
     });
 
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       unsubscribe();
+      if (animId) {
+        cancelAnimationFrame(animId);
+      }
     };
-  }, [isPreloaded, images, product.id, scrollYProgress, totalFrames, errorLoading]);
+  }, [isPreloaded, images, product.id, scrollYProgress, totalFrames, errorLoading, isHovered]);
 
   // Loading percent calculation
   const loadPercentage = Math.round((loadedCount / totalFrames) * 100);
 
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
+    }
+  }, []);
+
   return (
-    <div ref={containerRef} className="relative h-[480vh] w-full">
+    <div 
+      ref={containerRef} 
+      className="relative w-full"
+      style={{ height: "100vh" }}
+      onMouseEnter={() => { if (!isTouchDevice) setIsHovered(true); }}
+      onMouseLeave={() => { if (!isTouchDevice) setIsHovered(false); }}
+      onPointerEnter={() => { if (!isTouchDevice) setIsHovered(true); }}
+      onPointerLeave={() => { if (!isTouchDevice) setIsHovered(false); }}
+    >
       {/* Sticky Screen Viewport */}
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex items-center justify-center">
         
@@ -190,14 +259,14 @@ export default function ProductBottleScroll({ product }) {
         )}
 
         {/* The Engine Canvas */}
-        {product.id === "mango" && !errorLoading ? (
+        {activeConfig && !errorLoading ? (
           <canvas
             ref={canvasRef}
             className="w-full h-full max-h-screen max-w-full relative z-10 transition-opacity duration-700 pointer-events-none"
             style={{ 
               opacity: isPreloaded ? 1 : 0,
-              maskImage: "radial-gradient(circle at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 80%)",
-              WebkitMaskImage: "radial-gradient(circle at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 80%)"
+              maskImage: "radial-gradient(circle at center, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 90%)",
+              WebkitMaskImage: "radial-gradient(circle at center, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 90%)"
             }}
           />
         ) : (

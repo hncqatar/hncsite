@@ -17,9 +17,15 @@ import SpecialtiesGrid from "./components/SpecialtiesGrid.jsx";
 import FloatingFoodIcon from "./components/FloatingFoodIcon.jsx";
 import { products } from "./data/products.js";
 
+// Sub-pages state-routing imports
+import FindUsPage from "./components/FindUsPage.jsx";
+import MenuPage from "./components/MenuPage.jsx";
+import ContactUsPage from "./components/ContactUsPage.jsx";
+
 export default function App() {
   const [activeIdx, setActiveIdx] = useState(0);
   const activeProduct = products[activeIdx];
+  const [currentView, setCurrentView] = useState("landing"); // "landing" | "find-us" | "menu" | "contact-us"
 
   // Global theme settings
   useEffect(() => {
@@ -44,44 +50,54 @@ export default function App() {
     <div className="min-h-screen text-white font-sans selection:bg-[#EF233C] selection:text-white transition-colors duration-1000 bg-[#050B1F]">
       
       {/* Floating Transparent Glass Navbar */}
-      <Navbar />
+      <Navbar currentView={currentView} setCurrentView={setCurrentView} />
 
-      {/* Floating Active Flavor Selector Desk (Juice Campaign Engine Selector) */}
-      <div className="fixed top-24 left-1/2 -translate-x-1/2 z-40 w-full max-w-xl px-4 pointer-events-none">
-        <div className="premium-glass p-2.5 rounded-full flex items-center justify-between gap-1 shadow-[0_15px_50px_rgba(5,11,31,0.5)] border border-white/10 pointer-events-auto">
-          {products.map((prod, index) => {
-            const isActive = activeIdx === index;
-            return (
-              <button
-                key={prod.id}
-                onClick={() => handleFlavorChange(index)}
-                className={`flex-1 py-2.5 px-4 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-1.5 ${
-                  isActive 
-                    ? "text-white shadow-lg hover:scale-102"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
-                }`}
-                style={{
-                  backgroundColor: isActive ? "#EF233C" : "transparent",
-                  color: "#ffffff"
-                }}
-              >
-                {isActive && <Sparkles className="w-3.5 h-3.5 animate-spin-slow text-white" />}
-                {prod.name.split(" ")[1] || prod.name}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      {/* Dynamic Sub-page View rendering */}
+      <AnimatePresence mode="wait">
+        {currentView === "landing" && (
+          <motion.div
+            key="landing-view"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* Floating Active Flavor Selector Desk (Juice Campaign Engine Selector) */}
+            <div className="fixed top-24 left-1/2 -translate-x-1/2 z-40 w-full max-w-xl px-4 pointer-events-none">
+              <div className="premium-glass p-2.5 rounded-full flex items-center justify-between gap-1 shadow-[0_15px_50px_rgba(5,11,31,0.5)] border border-white/10 pointer-events-auto">
+                {products.map((prod, index) => {
+                  const isActive = activeIdx === index;
+                  return (
+                    <button
+                      key={prod.id}
+                      onClick={() => handleFlavorChange(index)}
+                      className={`flex-1 py-2.5 px-4 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-1.5 ${
+                        isActive 
+                          ? "text-white shadow-lg hover:scale-102"
+                          : "text-white/60 hover:text-white hover:bg-white/5"
+                      }`}
+                      style={{
+                        backgroundColor: isActive ? "#EF233C" : "transparent",
+                        color: "#ffffff"
+                      }}
+                    >
+                      {isActive && <Sparkles className="w-3.5 h-3.5 animate-spin-slow text-white" />}
+                      {prod.name.split(" ")[1] || prod.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
-      {/* ------------------------------------------------------------- */}
-      {/* SECTION 1: Canvas Scrollytelling Campaign */}
-      {/* ------------------------------------------------------------- */}
-      <ProductBottleScroll product={activeProduct} />
+            {/* ------------------------------------------------------------- */}
+            {/* SECTION 1: Canvas Scrollytelling Campaign */}
+            {/* ------------------------------------------------------------- */}
+            <ProductBottleScroll product={activeProduct} />
 
-      {/* ------------------------------------------------------------- */}
-      {/* SECTION 1.5: Signature Specialties Showcase Grid */}
-      {/* ------------------------------------------------------------- */}
-      <SpecialtiesGrid />
+            {/* ------------------------------------------------------------- */}
+            {/* SECTION 1.5: Signature Specialties Showcase Grid */}
+            {/* ------------------------------------------------------------- */}
+            <SpecialtiesGrid />
 
       {/* ------------------------------------------------------------- */}
       {/* SECTION 2: Detailed Corporate profile & Stats */}
@@ -111,11 +127,11 @@ export default function App() {
             <motion.div 
               initial={{ opacity: 0, x: -60 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
+              viewport={{ once: true, margin: "-30px", amount: 0.1 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="lg:col-span-6 flex flex-col gap-6"
             >
-              <div className="p-8 md:p-10 rounded-3xl luxury-card border border-white/5 relative overflow-hidden flex flex-col gap-6">
+              <div className="p-5 xs:p-8 md:p-10 rounded-3xl luxury-card border border-white/5 relative overflow-hidden flex flex-col gap-6">
                 
                 {/* 3D Steering coffee cup in background */}
                 <div className="absolute -top-6 -right-6 w-28 h-28 opacity-10 pointer-events-none">
@@ -179,11 +195,11 @@ export default function App() {
             <motion.div 
               initial={{ opacity: 0, x: 60 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
+              viewport={{ once: true, margin: "-30px", amount: 0.1 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="lg:col-span-6 flex flex-col gap-6"
             >
-              <div className="p-6 md:p-8 rounded-3xl premium-glass border border-white/10 shadow-2xl">
+              <div className="p-5 xs:p-8 rounded-3xl premium-glass border border-white/10 shadow-2xl">
                 
                 {/* Navigation Tab links inside card */}
                 <div className="flex border-b border-white/5 pb-4 gap-2 mb-6">
@@ -236,26 +252,26 @@ export default function App() {
                       <h4 className="text-white text-sm font-extrabold uppercase tracking-wider mb-2">
                         Corporate Footprint Specifications
                       </h4>
-                      <div className="flex flex-col gap-3 font-semibold text-sm">
-                        <div className="flex justify-between items-center py-2 border-b border-white/5">
+                      <div className="flex flex-col gap-3 font-semibold text-xs sm:text-sm">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2.5 sm:py-2 gap-1 sm:gap-4 border-b border-white/5 text-left">
                           <span className="text-white/50">Industry Segment</span>
                           <span className="text-white">Restaurant, Hospitality & Food Services</span>
                         </div>
-                        <div className="flex justify-between items-center py-2 border-b border-white/5">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2.5 sm:py-2 gap-1 sm:gap-4 border-b border-white/5 text-left">
                           <span className="text-white/50">Business Architecture</span>
                           <span className="text-white">Multi-Branch International Chain</span>
                         </div>
-                        <div className="flex justify-between items-center py-2 border-b border-white/5">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2.5 sm:py-2 gap-1 sm:gap-4 border-b border-white/5 text-left">
                           <span className="text-white/50">Network Coverage</span>
                           <span className="text-white">60+ Full-Scale Restaurants, 15+ Express Kiosks</span>
                         </div>
-                        <div className="flex justify-between items-center py-2 border-b border-white/5">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2.5 sm:py-2 gap-1 sm:gap-4 border-b border-white/5 text-left">
                           <span className="text-white/50">Target Demographics</span>
                           <span className="text-white">Families, Students, Professionals & Corporates</span>
                         </div>
-                        <div className="flex justify-between items-center py-2">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2.5 sm:py-2 gap-1 sm:gap-4 text-left">
                           <span className="text-white/50">Presence Boundaries</span>
-                          <span className="text-white text-[#EF233C]">
+                          <span className="text-[#EF233C]">
                             GCC Nations (Qatar Hub) & India
                           </span>
                         </div>
@@ -385,7 +401,7 @@ export default function App() {
           <motion.div 
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-30px", amount: 0.1 }}
             variants={{
               hidden: { opacity: 0 },
               visible: {
@@ -483,11 +499,26 @@ export default function App() {
           <div className="mt-16 text-center text-sm font-semibold max-w-xl mx-auto text-white/40 leading-relaxed border-t border-white/5 pt-10">
             We operate in perfect synchronization, ensuring that whether dining in or ordering at your doorstep, the taste profiles represent the legendary standards that have defined us since 1991.
           </div>
-        </div>
-      </section>
+          </div>
+        </section>
+      </motion.div>
+    )}
+  </AnimatePresence>
+
+      <AnimatePresence mode="wait">
+        {currentView === "find-us" && (
+          <FindUsPage onBack={() => { setCurrentView("landing"); window.scrollTo(0,0); }} />
+        )}
+        {currentView === "menu" && (
+          <MenuPage onBack={() => { setCurrentView("landing"); window.scrollTo(0,0); }} />
+        )}
+        {currentView === "contact-us" && (
+          <ContactUsPage onBack={() => { setCurrentView("landing"); window.scrollTo(0,0); }} />
+        )}
+      </AnimatePresence>
 
       {/* Elegant Footer Details */}
-      <Footer />
+      <Footer setCurrentView={setCurrentView} />
 
     </div>
   );

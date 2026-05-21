@@ -8,7 +8,7 @@ import {
   Phone,
 } from "lucide-react";
 
-export default function Footer() {
+export default function Footer({ setCurrentView }) {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
@@ -18,6 +18,23 @@ export default function Footer() {
     if (email) {
       setSubscribed(true);
       setEmail("");
+    }
+  };
+
+  const handleNavLink = (e, targetView, anchorId) => {
+    e.preventDefault();
+    if (setCurrentView) {
+      setCurrentView(targetView);
+    }
+    if (targetView === "landing" && anchorId) {
+      setTimeout(() => {
+        const el = document.getElementById(anchorId);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 150);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -35,7 +52,10 @@ export default function Footer() {
             <div className="flex items-center gap-3">
 
               {/* Logo */}
-              <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-white p-0.5 shadow-md overflow-hidden relative group/footerlogo transition-transform duration-300 hover:scale-105">
+              <div 
+                onClick={(e) => handleNavLink(e, "landing")}
+                className="w-10 h-10 flex items-center justify-center rounded-xl bg-white p-0.5 shadow-md overflow-hidden relative group/footerlogo transition-transform duration-300 hover:scale-105 cursor-pointer"
+              >
                 <img
                   src="/images/logo/HNC LOGO.jpg"
                   alt="HOTNCOOL Logo"
@@ -43,7 +63,10 @@ export default function Footer() {
                 />
               </div>
 
-              <span className="text-lg font-black tracking-tight bg-gradient-to-r from-orange-400 to-rose-500 bg-clip-text text-transparent">
+              <span 
+                onClick={(e) => handleNavLink(e, "landing")}
+                className="text-lg font-black tracking-tight bg-gradient-to-r from-orange-400 to-rose-500 bg-clip-text text-transparent cursor-pointer"
+              >
                 HOTNCOOL
               </span>
             </div>
@@ -108,6 +131,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#specialties"
+                  onClick={(e) => handleNavLink(e, "landing", "specialties")}
                   className="hover:text-white transition-colors duration-300"
                 >
                   Rice Meals & Biryani
@@ -117,6 +141,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#specialties"
+                  onClick={(e) => handleNavLink(e, "landing", "specialties")}
                   className="hover:text-white transition-colors duration-300"
                 >
                   Grills & BBQ Skewers
@@ -126,6 +151,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#specialties"
+                  onClick={(e) => handleNavLink(e, "landing", "specialties")}
                   className="hover:text-white transition-colors duration-300"
                 >
                   Italian & Indo-Chinese
@@ -135,6 +161,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#specialties"
+                  onClick={(e) => handleNavLink(e, "landing", "specialties")}
                   className="hover:text-white transition-colors duration-300 flex items-center gap-1.5"
                 >
                   <span>Fresh Juices & Mojitos</span>
@@ -156,8 +183,9 @@ export default function Footer() {
             <ul className="flex flex-col gap-3.5 text-sm">
               <li>
                 <a
-                  href="#details"
-                  className="hover:text-white transition-colors duration-300"
+                  href="#find-us"
+                  onClick={(e) => handleNavLink(e, "find-us")}
+                  className="hover:text-white transition-colors duration-300 font-semibold text-[#EF233C]"
                 >
                   60+ Branches & 15+ Kiosks
                 </a>
@@ -166,6 +194,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#details"
+                  onClick={(e) => handleNavLink(e, "landing", "details")}
                   className="hover:text-white transition-colors duration-300"
                 >
                   Multi-cuisine Restaurant Chain
@@ -175,6 +204,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#details"
+                  onClick={(e) => handleNavLink(e, "landing", "details")}
                   className="hover:text-white transition-colors duration-300"
                 >
                   Online Delivery Integration
@@ -184,6 +214,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#details"
+                  onClick={(e) => handleNavLink(e, "landing", "details")}
                   className="hover:text-white transition-colors duration-300"
                 >
                   Catering & Campus Services

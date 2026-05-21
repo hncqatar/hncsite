@@ -94,7 +94,7 @@ export default function SpecialtiesGrid() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-30px", amount: 0.1 }}
             transition={{ duration: 0.6 }}
             className="flex items-center gap-2 px-4.5 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6 backdrop-blur-md"
           >
@@ -107,7 +107,7 @@ export default function SpecialtiesGrid() {
           <motion.h2 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-30px", amount: 0.1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-none uppercase"
           >
@@ -117,7 +117,7 @@ export default function SpecialtiesGrid() {
           <motion.div 
             initial={{ width: 0 }}
             whileInView={{ width: "96px" }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-30px", amount: 0.1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="h-1 bg-[#EF233C] rounded-full mt-6" 
           />
@@ -125,7 +125,7 @@ export default function SpecialtiesGrid() {
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-30px", amount: 0.1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="mt-6 text-base md:text-lg text-white/45 max-w-xl font-medium leading-relaxed"
           >
@@ -138,7 +138,7 @@ export default function SpecialtiesGrid() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "-30px", amount: 0.1 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {specialties.map((item, index) => (
@@ -149,7 +149,7 @@ export default function SpecialtiesGrid() {
                 y: -12,
                 transition: { duration: 0.4, ease: "easeOut" }
               }}
-              className="group relative rounded-3xl overflow-hidden bg-gradient-to-b from-white/[0.04] to-transparent border border-white/5 shadow-2xl flex flex-col p-6 h-[460px] justify-between cursor-pointer transition-all duration-500 hover:border-[#EF233C]/30 hover:shadow-[0_20px_50px_rgba(239,35,60,0.1)]"
+              className="group relative rounded-3xl overflow-hidden bg-gradient-to-b from-white/[0.04] to-transparent border border-white/5 shadow-2xl flex flex-col p-6 min-h-[460px] justify-between cursor-pointer transition-all duration-500 hover:border-[#EF233C]/30 hover:shadow-[0_20px_50px_rgba(239,35,60,0.1)]"
             >
               
               {/* Premium Glow Highlight at top of card */}
@@ -219,9 +219,9 @@ export default function SpecialtiesGrid() {
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={{ once: true, margin: "-30px", amount: 0.1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-20 p-8 rounded-3xl premium-glass border border-white/10 grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 shadow-2xl relative overflow-hidden"
+          className="mt-20 p-5 xs:p-8 rounded-3xl premium-glass border border-white/10 grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-12 shadow-2xl relative overflow-hidden"
         >
           {/* Inner ambient glow */}
           <div className="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-[#EF233C]/10 blur-3xl pointer-events-none" />

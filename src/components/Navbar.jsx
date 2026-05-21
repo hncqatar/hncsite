@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Menu, X, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function Navbar() {
+export default function Navbar({ currentView, setCurrentView }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -21,6 +21,22 @@ export default function Navbar() {
   const toggleMenu = () => setIsOpen(prev => !prev);
   const closeMenu = () => setIsOpen(false);
 
+  const handleNavLink = (e, targetView, anchorId) => {
+    e.preventDefault();
+    setCurrentView(targetView);
+    closeMenu();
+    if (targetView === "landing" && anchorId) {
+      setTimeout(() => {
+        const el = document.getElementById(anchorId);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 150);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       <nav
@@ -33,7 +49,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           
           {/* Branding Logo */}
-          <a href="#" onClick={closeMenu} className="flex items-center gap-3 group">
+          <a href="#" onClick={(e) => handleNavLink(e, "landing")} className="flex items-center gap-3 group">
             <div className="relative w-10 h-10">
               {/* Outer pulsing color glow */}
               <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-amber-500 to-[#EF233C] opacity-40 blur-[3px] group-hover:opacity-100 group-hover:blur-[5px] transition duration-500" />
@@ -48,7 +64,7 @@ export default function Navbar() {
               <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-[#EF233C] rounded-full border border-white animate-ping" />
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-black tracking-tight bg-gradient-to-r from-orange-400 via-amber-500 to-[#EF233C] bg-clip-text text-transparent group-hover:opacity-90 transition-opacity">
+              <span className="text-xl font-black tracking-tight bg-gradient-to-r from-white via-amber-500 to-[#EF233C] bg-clip-text text-transparent group-hover:opacity-90 transition-opacity">
                 HOTNCOOL
               </span>
               <span className="text-[9px] font-semibold text-[#EF233C] tracking-[0.25em] leading-none uppercase">
@@ -59,19 +75,40 @@ export default function Navbar() {
 
           {/* Desktop Center Links */}
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-white/70">
-            <a href="#specialties" className="hover:text-white transition-colors duration-300 hover:scale-105">
-              Specialties
+            <a 
+              href="#specialties" 
+              onClick={(e) => handleNavLink(e, "landing", "specialties")}
+              className={`hover:text-white transition-all duration-300 hover:scale-105 ${
+                currentView === "landing" ? "text-white" : ""
+              }`}
+            >
+              SPECIALITIES
             </a>
-            <a href="#details" className="hover:text-white transition-colors duration-300 hover:scale-105">
-              Core Profile
-            </a>
-            <a href="#freshness" className="hover:text-white transition-colors duration-300 hover:scale-105">
-              Purity Standards
-            </a>
-            <a href="#footer" className="hover:text-white transition-colors duration-300 hover:scale-105 flex items-center gap-1.5">
+            <button 
+              onClick={(e) => handleNavLink(e, "menu")}
+              className={`hover:text-white transition-all duration-300 hover:scale-105 uppercase text-xs tracking-wider font-bold ${
+                currentView === "menu" ? "text-[#EF233C] font-black" : ""
+              }`}
+            >
+              Menu
+            </button>
+            <button 
+              onClick={(e) => handleNavLink(e, "find-us")}
+              className={`hover:text-white transition-all duration-300 hover:scale-105 uppercase text-xs tracking-wider font-bold flex items-center gap-1.5 ${
+                currentView === "find-us" ? "text-[#EF233C] font-black" : ""
+              }`}
+            >
               <Sparkles className="w-3.5 h-3.5 text-[#EF233C] animate-pulse" />
               Find Us
-            </a>
+            </button>
+            <button 
+              onClick={(e) => handleNavLink(e, "contact-us")}
+              className={`hover:text-white transition-all duration-300 hover:scale-105 uppercase text-xs tracking-wider font-bold ${
+                currentView === "contact-us" ? "text-[#EF233C] font-black" : ""
+              }`}
+            >
+              Contact Us
+            </button>
           </div>
 
           {/* Desktop CTA & Mobile Toggle */}
@@ -111,33 +148,40 @@ export default function Navbar() {
             <div className="flex flex-col p-6 gap-5 text-sm font-black uppercase tracking-widest text-center">
               <a 
                 href="#specialties" 
-                onClick={closeMenu}
+                onClick={(e) => handleNavLink(e, "landing", "specialties")}
                 className="py-3.5 rounded-2xl bg-white/[0.02] border border-white/5 text-white/80 hover:text-white hover:bg-[#EF233C]/10 hover:border-[#EF233C]/20 transition-all"
               >
                 Specialties
               </a>
-              <a 
-                href="#details" 
-                onClick={closeMenu}
-                className="py-3.5 rounded-2xl bg-white/[0.02] border border-white/5 text-white/80 hover:text-white hover:bg-[#EF233C]/10 hover:border-[#EF233C]/20 transition-all"
+              <button 
+                onClick={(e) => handleNavLink(e, "menu")}
+                className="py-3.5 rounded-2xl bg-white/[0.02] border border-white/5 text-white/80 hover:text-white hover:bg-[#EF233C]/10 hover:border-[#EF233C]/20 transition-all flex items-center justify-center gap-1.5"
               >
-                Core Profile
-              </a>
-              <a 
-                href="#freshness" 
-                onClick={closeMenu}
-                className="py-3.5 rounded-2xl bg-white/[0.02] border border-white/5 text-white/80 hover:text-white hover:bg-[#EF233C]/10 hover:border-[#EF233C]/20 transition-all"
+                Menu
+              </button>
+              <button 
+                onClick={(e) => handleNavLink(e, "find-us")}
+                className="py-3.5 rounded-2xl bg-white/[0.02] border border-white/5 text-white/80 hover:text-white hover:bg-[#EF233C]/10 hover:border-[#EF233C]/20 transition-all flex items-center justify-center gap-1.5"
               >
-                Purity Standards
-              </a>
+                Find Us
+              </button>
+              <button 
+                onClick={(e) => handleNavLink(e, "contact-us")}
+                className="py-3.5 rounded-2xl bg-white/[0.02] border border-white/5 text-white/80 hover:text-white hover:bg-[#EF233C]/10 hover:border-[#EF233C]/20 transition-all flex items-center justify-center gap-1.5"
+              >
+                Contact Us
+              </button>
               <a 
                 href="https://hotncool.qa" 
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={closeMenu}
-                className="py-3.5 rounded-2xl bg-white/[0.02] border border-white/5 text-white/80 hover:text-white hover:bg-[#EF233C]/10 hover:border-[#EF233C]/20 transition-all flex items-center justify-center gap-1.5"
+                className="py-3.5 rounded-2xl bg-white/[0.02] border border-white/5 text-white/80 hover:text-white hover:bg-[#EF233C]/10 hover:border-[#EF233C]/20 transition-all flex items-center justify-center gap-1.5 text-white"
+                style={{
+                  background: "linear-gradient(to right, #EF233C, #F97316)"
+                }}
               >
-                <Sparkles className="w-4 h-4 text-[#EF233C] animate-pulse" />
+                <Sparkles className="w-4 h-4 text-white animate-pulse" />
                 Order Now
               </a>
             </div>
