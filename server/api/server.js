@@ -20,17 +20,15 @@ app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error(`CORS blocked: ${origin}`));
+        return callback(null, true);
       }
+
+      return callback(new Error(`CORS blocked: ${origin}`));
     },
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
   })
 );
-
-app.options("*", cors());
 
 app.use(express.json({ limit: "1mb" }));
 
@@ -40,6 +38,13 @@ app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
     message: "HOTNCOOL backend is running",
+  });
+});
+
+app.get("/api", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "HOTNCOOL API is running",
   });
 });
 
