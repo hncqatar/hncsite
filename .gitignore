@@ -1,6 +1,3 @@
-node_modules
-dist
 .env
-dist
-.next
-
+packege-lock.json
+package.json
