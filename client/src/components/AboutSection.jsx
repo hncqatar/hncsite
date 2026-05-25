@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, ShieldCheck, Award, Utensils } from "lucide-react";
 
+
 /* ─────────────────────────── CONSTANTS ────────────────────────── */
 
 const EXPO = [0.16, 1, 0.3, 1];
