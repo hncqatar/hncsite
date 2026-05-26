@@ -196,11 +196,11 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-center sm:flex-row sm:text-left">
           <p className="text-xs font-bold uppercase tracking-[0.25em] text-white/35">
-            © {year} HNC Group. All rights reserved.
+            © {year} HNC GROUP WLL. All rights reserved.
           </p>
 
           <p className="text-xs font-bold uppercase tracking-[0.25em] text-white/35">
-            Designed for HOTNCOOL Restaurant Group
+             <B>HOTNCOOL</B>
           </p>
         </div>
       </div>
