@@ -40,11 +40,27 @@ export const menuItems = [
     description: "Cold, refreshing, freshly prepared fruit drinks and mojitos.",
   },
   {
+    id: 7,
+    category: "Juices",
+    name: "Signature & Special juices",
+    price: "8 - 50 QAR",
+    image: "/images/food/strb.png",
+    description: "Cold, refreshing, freshly prepared fruit juices.",
+  },
+  {
+    id: 7,
+    category: "Sandwiches",
+    name: "HNC Club Sandwiches",
+    price: "18 to 150 QAR",
+    image: "/images/food/Sandwich.png",
+    description: "Fresh bread with creamy sauces, zinger chcicken and premium fillings.",
+  },
+  {
     id: 6,
     category: "Pasta",
     name: "Creamy Pasta",
     price: "18 - 35 QAR",
-    image: "/images/food/pasta.png",
+    image: "/images/food/pizza.png",
     description: "Creamy pasta with rich sauces and premium toppings.",
   },
 ];

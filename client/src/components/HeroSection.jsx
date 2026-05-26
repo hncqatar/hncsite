@@ -31,6 +31,14 @@ const SLIDES = [
     image: "/images/food/pizza.png",
     tag: "Family Favourite",
     title: "Pizza &\nPasta",
+    accent: "#EF233C",
+  },
+  {
+    id: 5,
+    image: "/images/food/burgers.png",
+    tag: "Family Favourite",
+    title: "Burgers &\sandwiches",
+    accent: "#FFB74D",
   },
 ];
 
