@@ -200,7 +200,7 @@ export default function Footer() {
           </p>
 
           <p className="text-xs font-bold uppercase tracking-[0.25em] text-white/35">
-             <B>HOTNCOOL</B>
+             HOTNCOOL
           </p>
         </div>
       </div>

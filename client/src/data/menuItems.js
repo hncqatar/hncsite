@@ -48,7 +48,7 @@ export const menuItems = [
     description: "Cold, refreshing, freshly prepared fruit juices.",
   },
   {
-    id: 7,
+    id: 8,
     category: "Sandwiches",
     name: "HNC Club Sandwiches",
     price: "18 to 150 QAR",
@@ -56,7 +56,7 @@ export const menuItems = [
     description: "Fresh bread with creamy sauces, zinger chcicken and premium fillings.",
   },
   {
-    id: 6,
+    id: 9,
     category: "Pasta",
     name: "Creamy Pasta",
     price: "18 - 35 QAR",
