@@ -5,7 +5,7 @@ const items = [
   {
     title: "Rice & Dum Biryani",
     text: "Fragrant rice, rich spices and authentic slow-cooked flavor.",
-    image: "/images/food/rice.png",
+    image: "/images/food/biryani.png",
     icon: UtensilsCrossed,
   },
   {
@@ -17,7 +17,7 @@ const items = [
   {
     title: "Pizza & Pasta",
     text: "Creamy sauces, fresh toppings and family-friendly comfort meals.",
-    image: "/images/food/pasta.png",
+    image: "/images/food/pizza.png",
     icon: Pizza,
   },
   {
